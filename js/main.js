@@ -1,6 +1,6 @@
 (function ($) {
     "use strict";
-    
+
     // Dropdown on mouse hover
     $(document).ready(function () {
         function toggleNavbarMethod() {
@@ -17,8 +17,8 @@
         toggleNavbarMethod();
         $(window).resize(toggleNavbarMethod);
     });
-    
-    
+
+
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {
@@ -28,7 +28,7 @@
         }
     });
     $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
         return false;
     });
 
@@ -41,20 +41,20 @@
         autoplay: true,
         smartSpeed: 1000,
         responsive: {
-            0:{
-                items:2
+            0: {
+                items: 2
             },
-            576:{
-                items:3
+            576: {
+                items: 3
             },
-            768:{
-                items:4
+            768: {
+                items: 4
             },
-            992:{
-                items:5
+            992: {
+                items: 5
             },
-            1200:{
-                items:6
+            1200: {
+                items: 6
             }
         }
     });
@@ -68,17 +68,17 @@
         autoplay: true,
         smartSpeed: 1000,
         responsive: {
-            0:{
-                items:1
+            0: {
+                items: 1
             },
-            576:{
-                items:2
+            576: {
+                items: 2
             },
-            768:{
-                items:3
+            768: {
+                items: 3
             },
-            992:{
-                items:4
+            992: {
+                items: 4
             }
         }
     });
@@ -99,6 +99,85 @@
         }
         button.parent().parent().find('input').val(newVal);
     });
-    
+
 })(jQuery);
 
+
+// Chat
+
+const chatWindow = document.getElementById('chatWindow');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+sendBtn.addEventListener('click', handleUserInput);
+
+function handleUserInput() {
+    const userMessage = userInput.value.trim();
+    if (userMessage === '') return;
+
+    addMessageToChat(userMessage, 'user');
+    userInput.value = '';
+
+    handleBotResponse(userMessage);
+}
+
+function addMessageToChat(message, sender) {
+    const chatWindow = document.getElementById('chatWindow');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', sender);
+
+
+    if (message.includes('\n')) {
+        messageElement.innerHTML = message.replace(/\n/g, '<br>');
+    } else {
+        messageElement.innerHTML = message;
+    }
+
+    chatWindow.appendChild(messageElement);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function handleBotResponse(userMessage) {
+    let botMessage = '';
+
+    switch (userMessage) {
+        case '1':
+            botMessage = '¿Qué sesión desea visitar?\n';
+            botMessage += '1.1 Página de inicio\n';
+            botMessage += '1.2 ¿Quiénes somos?\n';
+            botMessage += '1.3 Otra...\n';
+            currentStep = '1';
+            break;
+        case '2':
+
+            botMessage = '<a href="/index.html" target="_blank">Da click aquí para conocer nuestros centros médicos aliados...</a>';
+
+            break;
+        case '3':
+
+            botMessage = '<a href="/index.html" target="_blank">Da click aquí para conocer nuestras oficinass...</a>';
+            break;
+        case '4':
+            botMessage = 'Redirigiendo con un Asesor...\n';
+            botMessage += 'Por favor espere un momento, ya que nuestros asesores se encuentran ocupados.';
+            setTimeout(() => window.location.href = '#contacto', 1000);
+            break;
+
+        case '1.1':
+            botMessage = '<a href="/index.html" target="_blank">Da click aquí para ir al Inicio...</a>';
+            
+            break;
+        case '1.2':
+            botMessage = 'Te dirigimos a la sección "¿Quiénes somos?"';
+            setTimeout(() => window.location.href = '/inicio', 1000);
+            break;
+        case '1.3':
+            botMessage = 'Te ofrecere otras opciones, por favor espera un momento...';
+            break;
+        default:
+            botMessage = 'Por favor, elige una opción válida: 1, 2, 3 o 4.';
+    }
+
+    addMessageToChat(botMessage, 'bot');
+
+}
